@@ -1,0 +1,5 @@
+python-telegram-bot --upgrade
+yt-dlp
+requests
+flask
+asyncio
