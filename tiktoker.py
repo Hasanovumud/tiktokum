@@ -25,7 +25,7 @@ TOKEN = "8706775383:AAH1666R0aetr06kiur612nxXgfiklj-H8E"
 AUDD_API_KEY = "1beceba87cfc9c253cee5787c2513e65"
 BOT_USERNAME = "@SonicDownloaderBot"
 ADMIN_USERNAME = "UmudHasanovTM"
-ADMIN_ID = 6378413470  # Admin paneli üçün sənin ID-n
+ADMIN_ID = 8446711093  # Admin paneli üçün sənin ID-n
 
 # SƏNİN GÖNDƏRDİYİN STİKER ID-LƏRİ
 STICKER_LIST = [
