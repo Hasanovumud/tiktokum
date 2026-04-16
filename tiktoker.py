@@ -76,7 +76,7 @@ def get_lang_keyboard():
         keyboard.append(row)
     return InlineKeyboardMarkup(keyboard)
 
-# --- PROSESLƏR ---
+# --- PROSESLƏR (503 XƏTASI ÜÇÜN DÜZƏLİŞLƏR) ---
 async def download_media(query):
     if not query.startswith("http"):
         query = f"ytsearch1:{query}"
@@ -87,12 +87,15 @@ async def download_media(query):
             try: os.remove(f)
             except: pass
 
+    # TikTok bloklanmalarına qarşı gücləndirilmiş tənzimləmələr
     common_opts = {
         'quiet': True,
         'noplaylist': True,
-        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-        'referer': 'https://www.google.com/',
         'nocheckcertificate': True,
+        'no_warnings': True,
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'referer': 'https://www.tiktok.com/',
+        'extractor_args': {'tiktok': {'impersonate': True}},
     }
 
     opts_v = {
@@ -110,8 +113,15 @@ async def download_media(query):
 
     try:
         loop = asyncio.get_event_loop()
+        # Yükləmə cəhdi
         await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts_v).download([query]))
         await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts_a).download([query]))
+        
+        # Əgər video hələ də yoxdursa (503 xətasına görə), bir dəfə də cəhd edirik
+        if not os.path.exists(v_file):
+            await asyncio.sleep(2)
+            await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts_v).download([query]))
+            
         return v_file, a_file
     except Exception as e:
         logging.error(f"Download error: {e}")
@@ -203,7 +213,6 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     keep_alive() 
     
-    # Builder-də tənzimləmələr
     app = (
         Application.builder()
         .token(TOKEN)
@@ -218,9 +227,8 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
 
-    print("Bot stabil rejimdə aktivdir...")
+    print("Bot tam stabil rejimdə aktivdir...")
     
-    # run_polling içində artıq arqument yoxdur
     app.run_polling(
         drop_pending_updates=True, 
         timeout=30, 
