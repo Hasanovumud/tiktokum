@@ -87,12 +87,12 @@ async def download_media(query):
             try: os.remove(f)
             except: pass
 
-    # TikTok və digər bloklamalara qarşı User-Agent əlavə edildi
     common_opts = {
         'quiet': True,
         'noplaylist': True,
         'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-        'referer': 'https://www.google.com/'
+        'referer': 'https://www.google.com/',
+        'nocheckcertificate': True,
     }
 
     opts_v = {
@@ -203,7 +203,7 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     keep_alive() 
     
-    # 40 saniyəlik timeoutlar Render üçün ən stabilidir
+    # Builder-də tənzimləmələr
     app = (
         Application.builder()
         .token(TOKEN)
@@ -218,13 +218,13 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
 
-    print("Bot tam stabil rejimdə aktivdir...")
+    print("Bot stabil rejimdə aktivdir...")
     
+    # run_polling içində artıq arqument yoxdur
     app.run_polling(
         drop_pending_updates=True, 
         timeout=30, 
-        read_timeout=30,
-        bootstrap_retries=10 # Bağlantı xətası olsa 10 dəfə təkrar yoxla
+        bootstrap_retries=10 
     )
 
 if __name__ == "__main__":
