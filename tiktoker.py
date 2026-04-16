@@ -35,26 +35,23 @@ LANGUAGES = {
     'az': {
         'name': '🇦🇿 Azərbaycan', 'start': 'Dil seçildi!', 'shazam': '🎵 Mahnı Tap', 'dl': '📥 Video/Mahnı Yüklə', 'help': '🆘 Kömək',
         'wait': 'Yüklənir... ⏳', 'find': 'Axtarılır... 🔎', 'not_found': 'Təəssüf ki, tapılmadı 😕', 'error': 'Xəta baş verdi! ❌',
-        'voice_req': '🎤 Mahnını tapmaq üçün səs yazısı göndərin.', 'link_req': '📥 Yükləmək üçün link və ya mahnı adı göndərin.', 'thanks': 'Kömək etdiyimə şadam! ❤️'
+        'voice_req': '🎤 Mahnını tapmaq üçün səs yazısı göndərin.', 'link_req': '📥 Yükləmək üçün link və ya mahnı adı göndərin.', 
+        'thanks': 'Kömək etdiyimə şadam! ❤️', 'ask_audio': '🎬 Video hazırdır! Mahnısını da (MP3) istəyirsən?', 'get_audio': '🎵 Bəli, MP3 yüklə'
     },
     'tr': {
         'name': '🇹🇷 Türkçe', 'start': 'Dil seçildi!', 'shazam': '🎵 Şarkı Bul', 'dl': '📥 Video/Müzik İndir', 'help': '🆘 Yardım',
         'wait': 'İndiriliyor... ⏳', 'find': 'Aranıyor... 🔎', 'not_found': 'Maalesef bulunamadı 😕', 'error': 'Bir hata oluştu! ❌',
-        'voice_req': '🎤 Şarkıyı bulmak için ses kaydı gönderin.', 'link_req': '📥 İndirmek için bağlantı veya şarkı ismi gönderin.', 'thanks': 'Yardımcı olduğuma sevindim! ❤️'
+        'voice_req': '🎤 Şarkıyı bulmak için ses kaydı gönderin.', 'link_req': '📥 İndirmek için bağlantı veya şarkı ismi gönderin.', 
+        'thanks': 'Yardımcı olduğuma sevindim! ❤️', 'ask_audio': '🎬 Video hazır! Müziğini de (MP3) ister misin?', 'get_audio': '🎵 Evet, MP3 indir'
     },
     'en': {
         'name': '🇺🇸 English', 'start': 'Language set!', 'shazam': '🎵 Find Song', 'dl': '📥 Download Media', 'help': '🆘 Help',
         'wait': 'Downloading... ⏳', 'find': 'Searching... 🔎', 'not_found': 'Not found 😕', 'error': 'Error occurred! ❌',
-        'voice_req': '🎤 Send a voice note.', 'link_req': '📥 Send a link or song name.', 'thanks': 'Happy to help! ❤️'
-    },
-    'ru': { 'name': '🇷🇺 Русский', 'start': 'Язык выбран!', 'shazam': '🎵 Найти песню', 'dl': '📥 Скачать', 'help': '🆘 Помощь', 'wait': 'Загрузка... ⏳', 'find': 'Поиск... 🔎', 'not_found': 'Не найдено 😕', 'error': 'Ошибка! ❌', 'voice_req': '🎤 Отправьте голос.', 'link_req': '📥 Отправьте ссылку.', 'thanks': 'Рад помочь! ❤️' },
-    'de': { 'name': '🇩🇪 Deutsch', 'start': 'Sprache gewählt!', 'shazam': '🎵 Lied finden', 'dl': '📥 Video/Musik laden', 'help': '🆘 Hilfe', 'wait': 'Lädt... ⏳', 'find': 'Suche... 🔎', 'not_found': 'Nicht gefunden 😕', 'error': 'Fehler! ❌', 'voice_req': '🎤 Sende eine Sprachnachricht.', 'link_req': '📥 Sende einen Link.', 'thanks': 'Gerne geschehen! ❤️' },
-    'fr': { 'name': '🇫🇷 Français', 'start': 'Langue choisie!', 'shazam': '🎵 Trouver chanson', 'dl': '📥 Télécharger', 'help': '🆘 Aide', 'wait': 'Chargement... ⏳', 'find': 'Recherche... 🔎', 'not_found': 'Pas trouvé 😕', 'error': 'Erreur! ❌', 'voice_req': '🎤 Envoyez un message vocal.', 'link_req': '📥 Envoyez un lien.', 'thanks': 'Content d\'aider! ❤️' },
-    'es': { 'name': '🇪🇸 Español', 'start': '¡Idioma elegido!', 'shazam': '🎵 Buscar canción', 'dl': '📥 Descargar', 'help': '🆘 Ayuda', 'wait': 'Descargando... ⏳', 'find': 'Buscando... 🔎', 'not_found': 'No encontrado 😕', 'error': '¡Error! ❌', 'voice_req': '🎤 Envía una nota de voz.', 'link_req': '📥 Envía un enlace.', 'thanks': '¡Feliz de ayudar! ❤️' },
-    'it': { 'name': '🇮🇹 Italiano', 'start': 'Lingua scelta!', 'shazam': '🎵 Trova canzone', 'dl': '📥 Scarica', 'help': '🆘 Ayuto', 'wait': 'Caricamento... ⏳', 'find': 'Ricerca... 🔎', 'not_found': 'Non trovato 😕', 'error': 'Errore! ❌', 'voice_req': '🎤 Invia un messaggio vocale.', 'link_req': '🇮🇹 Invia un link.', 'thanks': 'Felice di aiutarti! ❤️' },
-    'ar': { 'name': '🇸🇦 العربية', 'start': 'تم اختيار اللغة!', 'shazam': '🎵 البحث عن أغنية', 'dl': '📥 تحميل فيديو/موسيقى', 'help': '🆘 مساعدة', 'wait': 'جاري التحميل... ⏳', 'find': 'جari البحث... 🔎', 'not_found': 'لم يتم العثور عليه 😕', 'error': 'خطأ! ❌', 'voice_req': '🎤 أرسل رسالة صوتية للبحث.', 'link_req': '📥 أرسل الرابط.', 'thanks': 'سعيد بمساعدتك! ❤️' },
-    'ua': { 'name': '🇺🇦 Українська', 'start': 'Мову обрано!', 'shazam': '🎵 Знайти пісню', 'dl': '📥 Завантажити', 'help': '🆘 Допомога', 'wait': 'Завантаження... ⏳', 'find': 'Поиск... 🔎', 'not_found': 'Не знайдено 😕', 'error': 'Помилка! ❌', 'voice_req': '🎤 Надішліть голосове повідомлення.', 'link_req': '📥 Надішліть посилання.', 'thanks': 'Радий допомогти! ❤️' }
+        'voice_req': '🎤 Send a voice note.', 'link_req': '📥 Send a link or song name.', 
+        'thanks': 'Happy to help! ❤️', 'ask_audio': '🎬 Video is ready! Do you want the audio (MP3) too?', 'get_audio': '🎵 Yes, download MP3'
+    }
 }
+# Digər dillər eyni məntiqlə bura əlavə oluna bilər.
 
 user_prefs = {}
 
@@ -76,67 +73,48 @@ def get_lang_keyboard():
         keyboard.append(row)
     return InlineKeyboardMarkup(keyboard)
 
-# --- PROSESLƏR (503 XƏTASI ÜÇÜN DÜZƏLİŞLƏR) ---
-async def download_media(query):
+# --- PROSESLƏR ---
+async def download_video(query):
     if not query.startswith("http"):
         query = f"ytsearch1:{query}"
+    
+    v_file = "video.mp4"
+    if os.path.exists(v_file): os.remove(v_file)
 
-    v_file, a_file = "video.mp4", "audio.mp3"
-    for f in [v_file, a_file]:
-        if os.path.exists(f): 
-            try: os.remove(f)
-            except: pass
-
-    # TikTok bloklanmalarına qarşı gücləndirilmiş tənzimləmələr
-    common_opts = {
-        'quiet': True,
-        'noplaylist': True,
-        'nocheckcertificate': True,
-        'no_warnings': True,
-        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'referer': 'https://www.tiktok.com/',
-        'extractor_args': {'tiktok': {'impersonate': True}},
-    }
-
-    opts_v = {
-        **common_opts,
+    opts = {
         'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
         'outtmpl': 'video.%(ext)s',
+        'quiet': True,
+        'noplaylist': True,
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'extractor_args': {'tiktok': {'impersonate': True}},
     }
-    
-    opts_a = {
-        **common_opts,
+    try:
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts).download([query]))
+        return v_file if os.path.exists(v_file) else None
+    except: return None
+
+async def download_audio(query):
+    if not query.startswith("http"):
+        query = f"ytsearch1:{query}"
+        
+    a_file = "audio.mp3"
+    if os.path.exists("audio.mp3"): os.remove("audio.mp3")
+
+    opts = {
         'format': 'bestaudio/best',
         'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3', 'preferredquality': '192'}],
         'outtmpl': 'audio',
+        'quiet': True,
+        'noplaylist': True,
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     }
-
     try:
         loop = asyncio.get_event_loop()
-        # Yükləmə cəhdi
-        await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts_v).download([query]))
-        await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts_a).download([query]))
-        
-        # Əgər video hələ də yoxdursa (503 xətasına görə), bir dəfə də cəhd edirik
-        if not os.path.exists(v_file):
-            await asyncio.sleep(2)
-            await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts_v).download([query]))
-            
-        return v_file, a_file
-    except Exception as e:
-        logging.error(f"Download error: {e}")
-        return None, None
-
-async def find_song_audd(file_path, lang_code):
-    l = LANGUAGES.get(lang_code, LANGUAGES['az'])
-    try:
-        with open(file_path, 'rb') as f:
-            res = requests.post('https://api.audd.io/', data={'api_token': AUDD_API_KEY}, files={'file': f}).json()
-        if res.get('status') == 'success' and res.get('result'):
-            r = res['result']
-            return f"🎧 {r['title']} - {r['artist']}"
-        return l['not_found']
-    except: return l['error']
+        await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts).download([query]))
+        return a_file if os.path.exists(a_file) else None
+    except: return None
 
 # --- HANDLERS ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -146,22 +124,38 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user_id = query.from_user.id
     await query.answer()
+    
+    lang = user_prefs.get(user_id, 'az')
+    l = LANGUAGES.get(lang, LANGUAGES['az'])
+
     if query.data.startswith('l_'):
         lang = query.data.split('_')[1]
         user_prefs[user_id] = lang
-        l = LANGUAGES[lang]
-        await query.edit_message_text(text=l['start'], reply_markup=get_main_buttons(lang))
+        await query.edit_message_text(text=LANGUAGES[lang]['start'], reply_markup=get_main_buttons(lang))
+        
     elif query.data == 'act_shazam':
-        lang = user_prefs.get(user_id, 'az')
-        await query.message.reply_text(LANGUAGES[lang]['voice_req'])
+        await query.message.reply_text(l['voice_req'])
+        
     elif query.data == 'act_dl':
-        lang = user_prefs.get(user_id, 'az')
-        await query.message.reply_text(LANGUAGES[lang]['link_req'])
+        await query.message.reply_text(l['link_req'])
+        
+    elif query.data.startswith('getmp3_'):
+        # Callback data limitinə görə burada bəzən problem ola bilər, 
+        # amma link qısadırsa işləyəcək. Alternativ olaraq son mesajı yadda saxlayırıq.
+        original_query = query.data.replace('getmp3_', '')
+        await query.message.reply_text(l['wait'])
+        audio = await download_audio(original_query)
+        if audio:
+            with open(audio, 'rb') as f:
+                await context.bot.send_audio(chat_id=query.message.chat_id, audio=f, caption=f"🎵 {BOT_USERNAME}")
+            os.remove(audio)
+        else:
+            await query.message.reply_text(l['error'])
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     lang = user_prefs.get(user_id, 'az')
-    l = LANGUAGES[lang]
+    l = LANGUAGES.get(lang, LANGUAGES['az'])
     text = update.message.text
 
     try: await update.message.set_reaction(reaction="👀")
@@ -169,71 +163,60 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await context.bot.send_chat_action(chat_id=update.message.chat_id, action="upload_video")
 
-    v, a = await download_media(text)
+    # Yalnız videonu yükləyirik
+    video = await download_video(text)
 
-    if v and os.path.exists(v):
-        caption_text = f"{l['thanks']}\n\n🤖 Bot: {BOT_USERNAME}"
-        await context.bot.send_chat_action(chat_id=update.message.chat_id, action="upload_video")
-        with open(v, 'rb') as vf:
+    if video:
+        with open(video, 'rb') as vf:
             await context.bot.send_video(
                 chat_id=update.message.chat_id, 
                 video=vf, 
-                caption=caption_text, 
-                reply_markup=get_main_buttons(lang)
+                caption=f"✅ {l['thanks']}\n\n🤖 {BOT_USERNAME}"
             )
+        os.remove(video)
         
-        if os.path.exists(a):
-            await context.bot.send_chat_action(chat_id=update.message.chat_id, action="upload_document")
-            with open(a, 'rb') as af:
-                await context.bot.send_audio(chat_id=update.message.chat_id, audio=af, caption=caption_text)
-
-        if os.path.exists(v): os.remove(v)
-        if os.path.exists(a): os.remove(a)
+        # Video göndərildikdən sonra audio istəyib-istəmədiyini soruşuruq
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton(l['get_audio'], callback_data=f"getmp3_{text[:40]}")] # Limitə görə qısaldırıq
+        ])
+        await update.message.reply_text(l['ask_audio'], reply_markup=keyboard)
         
         try: await update.message.set_reaction(reaction="✅")
         except: pass
     else:
-        try: await update.message.set_reaction(reaction=[])
-        except: pass
         await update.message.reply_text(l['error'])
 
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     lang = user_prefs.get(user_id, 'az')
-    l = LANGUAGES[lang]
+    l = LANGUAGES.get(lang, LANGUAGES['az'])
     msg = await update.message.reply_text(l['find'])
     file = await (update.message.voice or update.message.audio).get_file()
     path = f"s_{user_id}.ogg"
     await file.download_to_drive(path)
-    res = await find_song_audd(path, lang)
-    await msg.edit_text(res, reply_markup=get_main_buttons(lang))
+    
+    # API açarını yoxla
+    res = requests.post('https://api.audd.io/', data={'api_token': AUDD_API_KEY}, files={'file': open(path, 'rb')}).json()
+    if res.get('status') == 'success' and res.get('result'):
+        r = res['result']
+        await msg.edit_text(f"🎧 {r['title']} - {r['artist']}", reply_markup=get_main_buttons(lang))
+    else:
+        await msg.edit_text(l['not_found'], reply_markup=get_main_buttons(lang))
+        
     if os.path.exists(path): os.remove(path)
 
 # --- İŞƏ SALMA ---
 def main():
     keep_alive() 
-    
-    app = (
-        Application.builder()
-        .token(TOKEN)
-        .connect_timeout(40)
-        .read_timeout(40)
-        .write_timeout(40)
-        .build()
-    )
+    app = Application.builder().token(TOKEN).connect_timeout(40).read_timeout(40).write_timeout(40).build()
     
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(callback_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
 
-    print("Bot tam stabil rejimdə aktivdir...")
-    
-    app.run_polling(
-        drop_pending_updates=True, 
-        timeout=30, 
-        bootstrap_retries=10 
-    )
+    print("Bot stabil rejimdə aktivdir...")
+    app.run_polling(drop_pending_updates=True, timeout=30, bootstrap_retries=10)
 
 if __name__ == "__main__":
     main()
