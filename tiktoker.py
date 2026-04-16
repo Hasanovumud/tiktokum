@@ -23,14 +23,14 @@ def keep_alive():
     t = Thread(target=run)
     t.start()
 
-# --- AYARLAR (Bura toxunma) ---
+# --- AYARLAR ---
 TOKEN = "8706775383:AAH1666R0aetr06kiur612nxXgfiklj-H8E"
 AUDD_API_KEY = "1beceba87cfc9c253cee5787c2513e65"
-BOT_USERNAME = "@SonicDownloaderBot" # Buraya botunun @username-ni yaz
+BOT_USERNAME = "@SonicDownloaderBot"
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-# --- 10 DİLLİ TAM SİSTEM ---
+# --- DİL SİSTEMİ ---
 LANGUAGES = {
     'az': {
         'name': '🇦🇿 Azərbaycan', 'start': 'Dil seçildi!', 'shazam': '🎵 Mahnı Tap', 'dl': '📥 Video/Mahnı Yüklə', 'help': '🆘 Kömək',
@@ -47,13 +47,12 @@ LANGUAGES = {
         'wait': 'Downloading... ⏳', 'find': 'Searching... 🔎', 'not_found': 'Not found 😕', 'error': 'Error occurred! ❌',
         'voice_req': '🎤 Send a voice note.', 'link_req': '📥 Send a link or song name.', 'thanks': 'Happy to help! ❤️'
     },
-    # Digər 7 dil də buradadır (qısaldılıb, amma tam koda daxildir)
     'ru': { 'name': '🇷🇺 Русский', 'start': 'Язык выбран!', 'shazam': '🎵 Найти песню', 'dl': '📥 Скачать', 'help': '🆘 Помощь', 'wait': 'Загрузка... ⏳', 'find': 'Поиск... 🔎', 'not_found': 'Не найдено 😕', 'error': 'Ошибка! ❌', 'voice_req': '🎤 Отправьте голос.', 'link_req': '📥 Отправьте ссылку.', 'thanks': 'Рад помочь! ❤️' },
     'de': { 'name': '🇩🇪 Deutsch', 'start': 'Sprache gewählt!', 'shazam': '🎵 Lied finden', 'dl': '📥 Video/Musik laden', 'help': '🆘 Hilfe', 'wait': 'Lädt... ⏳', 'find': 'Suche... 🔎', 'not_found': 'Nicht gefunden 😕', 'error': 'Fehler! ❌', 'voice_req': '🎤 Sende eine Sprachnachricht.', 'link_req': '📥 Sende einen Link.', 'thanks': 'Gerne geschehen! ❤️' },
     'fr': { 'name': '🇫🇷 Français', 'start': 'Langue choisie!', 'shazam': '🎵 Trouver chanson', 'dl': '📥 Télécharger', 'help': '🆘 Aide', 'wait': 'Chargement... ⏳', 'find': 'Recherche... 🔎', 'not_found': 'Pas trouvé 😕', 'error': 'Erreur! ❌', 'voice_req': '🎤 Envoyez un message vocal.', 'link_req': '📥 Envoyez un lien.', 'thanks': 'Content d\'aider! ❤️' },
     'es': { 'name': '🇪🇸 Español', 'start': '¡Idioma elegido!', 'shazam': '🎵 Buscar canción', 'dl': '📥 Descargar', 'help': '🆘 Ayuda', 'wait': 'Descargando... ⏳', 'find': 'Buscando... 🔎', 'not_found': 'No encontrado 😕', 'error': '¡Error! ❌', 'voice_req': '🎤 Envía una nota de voz.', 'link_req': '📥 Envía un enlace.', 'thanks': '¡Feliz de ayudar! ❤️' },
-    'it': { 'name': '🇮🇹 Italiano', 'start': 'Lingua scelta!', 'shazam': '🎵 Trova canzone', 'dl': '📥 Scarica', 'help': '🆘 Ayuto', 'wait': 'Caricamento... ⏳', 'find': 'Ricerca... 🔎', 'not_found': 'Non trovato 😕', 'error': 'Errore! ❌', 'voice_req': '🎤 Invia un messaggio vocale.', 'link_req': '📥 Invia un link.', 'thanks': 'Felice di aiutarti! ❤️' },
-    'ar': { 'name': '🇸🇦 العربية', 'start': 'تم اختيار اللغة!', 'shazam': '🎵 البحث عن أغنية', 'dl': '📥 تحميل فيديو/موسيقى', 'help': '🆘 مساعدة', 'wait': 'جاري التحميل... ⏳', 'find': 'جاري البحث... 🔎', 'not_found': 'لم يتم العثور عليه 😕', 'error': 'خطأ! ❌', 'voice_req': '🎤 أرسل رسالة صوتية للبحث.', 'link_req': '📥 أرسل الرابط.', 'thanks': 'سعيد بمساعدتك! ❤️' },
+    'it': { 'name': '🇮🇹 Italiano', 'start': 'Lingua scelta!', 'shazam': '🎵 Trova canzone', 'dl': '📥 Scarica', 'help': '🆘 Ayuto', 'wait': 'Caricamento... ⏳', 'find': 'Ricerca... 🔎', 'not_found': 'Non trovato 😕', 'error': 'Errore! ❌', 'voice_req': '🎤 Invia un messaggio vocale.', 'link_req': 'Invia un link.', 'thanks': 'Felice di aiutarti! ❤️' },
+    'ar': { 'name': '🇸🇦 العربية', 'start': 'تم اختيار اللغة!', 'shazam': '🎵 البحث عن أغنية', 'dl': '📥 تحميل فيديو/موسيقى', 'help': '🆘 مساعدة', 'wait': 'جاري التحميل... ⏳', 'find': 'جari البحث... 🔎', 'not_found': 'لم يتم العثور عليه 😕', 'error': 'خطأ! ❌', 'voice_req': '🎤 أرسل رسالة صوتية للبحث.', 'link_req': '📥 أرسل الرابط.', 'thanks': 'سعيد بمساعدتك! ❤️' },
     'ua': { 'name': '🇺🇦 Українська', 'start': 'Мову обрано!', 'shazam': '🎵 Знайти пісню', 'dl': '📥 Завантажити', 'help': '🆘 Допомога', 'wait': 'Завантаження... ⏳', 'find': 'Поиск... 🔎', 'not_found': 'Не знайдено 😕', 'error': 'Помилка! ❌', 'voice_req': '🎤 Надішліть голосове повідомлення.', 'link_req': '📥 Надішліть посилання.', 'thanks': 'Радий допомогти! ❤️' }
 }
 
@@ -77,9 +76,8 @@ def get_lang_keyboard():
         keyboard.append(row)
     return InlineKeyboardMarkup(keyboard)
 
-# --- PROSESLƏR (Sürətləndirilmiş) ---
+# --- PROSESLƏR ---
 async def download_media(query):
-    # Ağıllı axtarış: Əgər link deyilsə, youtube-da axtarır
     if not query.startswith("http"):
         query = f"ytsearch1:{query}"
 
@@ -89,7 +87,6 @@ async def download_media(query):
             try: os.remove(f)
             except: pass
 
-    # Sürətli yükləmə üçün optimallaşdırılmış seçimlər
     opts_v = {
         'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
         'outtmpl': 'video.%(ext)s',
@@ -148,19 +145,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     l = LANGUAGES[lang]
     text = update.message.text
 
-    # Reaksiya qoyuruq 👀
     try: await update.message.set_reaction(reaction="👀")
     except: pass
     
-    # Yuxarıda status göstəririk
     await context.bot.send_chat_action(chat_id=update.message.chat_id, action="upload_video")
 
     v, a = await download_media(text)
 
     if v and os.path.exists(v):
-        # Viral reklam imzası əlavə edirik
         caption_text = f"{l['thanks']}\n\n🤖 Bot: {BOT_USERNAME}"
-        
         await context.bot.send_chat_action(chat_id=update.message.chat_id, action="upload_video")
         with open(v, 'rb') as vf:
             await context.bot.send_video(
@@ -178,11 +171,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if os.path.exists(v): os.remove(v)
         if os.path.exists(a): os.remove(a)
         
-        # Bitəndə reaksiyanı ✅ edirik
         try: await update.message.set_reaction(reaction="✅")
         except: pass
     else:
-        # Reaksiyanı silib xəta mesajı göndəririk
         try: await update.message.set_reaction(reaction=[])
         except: pass
         await update.message.reply_text(l['error'])
@@ -199,14 +190,34 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await msg.edit_text(res, reply_markup=get_main_buttons(lang))
     if os.path.exists(path): os.remove(path)
 
+# --- ƏSAS İŞƏ SALMA (STABİLLİK TƏNZİMLƏNMİŞ) ---
 def main():
     keep_alive() 
-    app = Application.builder().token(TOKEN).build()
+    
+    # Şəbəkə bağlantısını gücləndiririk
+    app = (
+        Application.builder()
+        .token(TOKEN)
+        .connect_timeout(40) # 40 saniyə bağlantı gözləmə
+        .read_timeout(40)    # 40 saniyə məlumat oxuma
+        .write_timeout(40)   # 40 saniyə cavab göndərmə
+        .build()
+    )
+    
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(callback_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
-    app.run_polling()
+
+    print("Bot stabil rejimdə işə düşdü...")
+    
+    # Polling xətalarına qarşı dözümlü tənzimləmə
+    app.run_polling(
+        drop_pending_updates=True, 
+        timeout=30, 
+        read_timeout=30,
+        bootstrap_retries=5  # Bağlantı qopanda 5 dəfə təkrar cəhd et
+    )
 
 if __name__ == "__main__":
     main()
