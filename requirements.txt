@@ -1,4 +1,5 @@
-python-telegram-bot
-yt-dlp
-requests
+python-telegram-bot --upgrade
+yt-dlp[default]
 flask
+requests
+httpx --upgrade
