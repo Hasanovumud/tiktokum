@@ -4,6 +4,7 @@ import yt_dlp
 import asyncio
 import requests
 import random
+import json # Statistika üçün əlavə edildi
 from flask import Flask
 from threading import Thread
 
@@ -23,7 +24,8 @@ def keep_alive():
 TOKEN = "8706775383:AAH1666R0aetr06kiur612nxXgfiklj-H8E"
 AUDD_API_KEY = "1beceba87cfc9c253cee5787c2513e65"
 BOT_USERNAME = "@SonicDownloaderBot"
-ADMIN_USERNAME = "UmudHasanovTM" # Sənin hesabına yönləndirmə üçün
+ADMIN_USERNAME = "UmudHasanovTM"
+ADMIN_ID = 6378413470  # Admin paneli üçün sənin ID-n
 
 # SƏNİN GÖNDƏRDİYİN STİKER ID-LƏRİ
 STICKER_LIST = [
@@ -35,7 +37,29 @@ STICKER_LIST = [
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-# --- BÜTÜN DİLLƏR (Hamsı bərpa olundu) ---
+# --- STATİSTİKA VƏ ADMİN FUNKSİYALARI ---
+DB_FILE = "users_db.json"
+
+def load_db():
+    if os.path.exists(DB_FILE):
+        with open(DB_FILE, "r") as f: return json.load(f)
+    return {"users": [], "total_downloads": 0}
+
+def save_db(db):
+    with open(DB_FILE, "w") as f: json.dump(db, f)
+
+def log_user(user_id):
+    db = load_db()
+    if user_id not in db["users"]:
+        db["users"].append(user_id)
+        save_db(db)
+
+def log_download():
+    db = load_db()
+    db["total_downloads"] += 1
+    save_db(db)
+
+# --- BÜTÜN DİLLƏR ---
 LANGUAGES = {
     'az': {'name': '🇦🇿 Azərbaycan', 'start': 'Dil seçildi!', 'shazam': '🎵 Mahnı Tap', 'dl': '📥 Video/Mahnı Yüklə', 'help': '🆘 Kömək', 'wait': 'Yüklənir... ⏳', 'find': 'Axtarılır... 🔎', 'not_found': 'Təəssüf ki, tapılmadı 😕', 'error': 'Xəta baş verdi! ❌', 'voice_req': '🎤 Mahnını tapmaq üçün səs yazısı göndərin.', 'link_req': '📥 Yükləmək üçün link və ya mahnı adı göndərin.', 'thanks': 'Kömək etdiyimə şadam! ❤️', 'ask_audio': '🎬 Video hazırdır! Mahnısını da (MP3) istəyirsən?', 'get_audio': '🎵 Bəli, MP3 yüklə'},
     'tr': {'name': '🇹🇷 Türkçe', 'start': 'Dil seçildi!', 'shazam': '🎵 Şarkı Bul', 'dl': '📥 Video/Müzik İndir', 'help': '🆘 Yardım', 'wait': 'İndiriliyor... ⏳', 'find': 'Aranıyor... 🔎', 'not_found': 'Maalesef bulunamadı 😕', 'error': 'Bir hata oluştu! ❌', 'voice_req': '🎤 Şarkıyı bulmak için ses kaydı gönderin.', 'link_req': '📥 İndirmek için bağlantı veya şarkı ismi gönderin.', 'thanks': 'Yardımcı olduğuma sevindim! ❤️', 'ask_audio': '🎬 Video hazır! Müziğini de (MP3) ister misin?', 'get_audio': '🎵 Evet, MP3 indir'},
@@ -83,6 +107,7 @@ async def download_audio(query):
 
 # --- HANDLERS ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    log_user(update.effective_user.id) # İd qeyd olunur
     await update.message.reply_text("Dil seçin / Choose language:", reply_markup=InlineKeyboardMarkup([
         [InlineKeyboardButton(v['name'], callback_data=f"l_{k}")] for k, v in LANGUAGES.items()
     ]))
@@ -90,6 +115,28 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("👨‍💻 Admin", url=f"https://t.me/{ADMIN_USERNAME}")]])
     await update.message.reply_text("Problem yarandı? Adminlə əlaqə saxlayın:", reply_markup=keyboard)
+
+# --- ADMİN PANEL ƏMRLƏRİ ---
+async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id != ADMIN_ID: return
+    db = load_db()
+    await update.message.reply_text(f"📊 **Statistika**\n\n👤 İstifadəçi sayı: {len(db['users'])}\n📥 Cəmi yükləmə: {db['total_downloads']}")
+
+async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id != ADMIN_ID: return
+    if not context.args:
+        await update.message.reply_text("İstifadə: `/send mesaj`", parse_mode="Markdown")
+        return
+    
+    msg = " ".join(context.args)
+    db = load_db()
+    count = 0
+    for uid in db["users"]:
+        try:
+            await context.bot.send_message(chat_id=uid, text=msg)
+            count += 1
+        except: pass
+    await update.message.reply_text(f"✅ Mesaj {count} nəfərə göndərildi.")
 
 async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -120,6 +167,7 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_chat_action(chat_id=query.message.chat_id, action="upload_document")
         audio = await download_audio(original_query)
         if audio:
+            log_download() # Yükləmə qeydi
             with open(audio, 'rb') as f:
                 await context.bot.send_audio(chat_id=query.message.chat_id, audio=f, caption=f"🎵 {BOT_USERNAME}")
             os.remove(audio)
@@ -129,6 +177,7 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
+    log_user(user_id) # İd qeyd olunur
     lang = user_prefs.get(user_id, 'az')
     l = LANGUAGES.get(lang, LANGUAGES['az'])
     text = update.message.text
@@ -141,6 +190,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     video = await download_video(text)
 
     if video:
+        log_download() # Yükləmə qeydi
         with open(video, 'rb') as vf:
             await context.bot.send_video(chat_id=update.message.chat_id, video=vf, caption=f"✅ {l['thanks']}\n\n🤖 {BOT_USERNAME}")
         os.remove(video)
@@ -155,10 +205,16 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     keep_alive()
     app = Application.builder().token(TOKEN).connect_timeout(40).read_timeout(40).write_timeout(40).build()
+    
+    # Handlerlər
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("stats", stats))     # Statistika əmri
+    app.add_handler(CommandHandler("send", broadcast)) # Mesaj göndərmə əmri
+    
     app.add_handler(CallbackQueryHandler(callback_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    
     app.run_polling(drop_pending_updates=True)
 
 if __name__ == "__main__": main()
