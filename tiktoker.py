@@ -23,6 +23,7 @@ def keep_alive():
 TOKEN = "8706775383:AAH1666R0aetr06kiur612nxXgfiklj-H8E"
 AUDD_API_KEY = "1beceba87cfc9c253cee5787c2513e65"
 BOT_USERNAME = "@SonicDownloaderBot"
+ADMIN_USERNAME = "umud_hasanov" # Sənin hesabına yönləndirmə üçün
 
 # SƏNİN GÖNDƏRDİYİN STİKER ID-LƏRİ
 STICKER_LIST = [
@@ -34,7 +35,7 @@ STICKER_LIST = [
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-# --- BÜTÜN DİLLƏR ---
+# --- BÜTÜN DİLLƏR (Hamsı bərpa olundu) ---
 LANGUAGES = {
     'az': {'name': '🇦🇿 Azərbaycan', 'start': 'Dil seçildi!', 'shazam': '🎵 Mahnı Tap', 'dl': '📥 Video/Mahnı Yüklə', 'help': '🆘 Kömək', 'wait': 'Yüklənir... ⏳', 'find': 'Axtarılır... 🔎', 'not_found': 'Təəssüf ki, tapılmadı 😕', 'error': 'Xəta baş verdi! ❌', 'voice_req': '🎤 Mahnını tapmaq üçün səs yazısı göndərin.', 'link_req': '📥 Yükləmək üçün link və ya mahnı adı göndərin.', 'thanks': 'Kömək etdiyimə şadam! ❤️', 'ask_audio': '🎬 Video hazırdır! Mahnısını da (MP3) istəyirsən?', 'get_audio': '🎵 Bəli, MP3 yüklə'},
     'tr': {'name': '🇹🇷 Türkçe', 'start': 'Dil seçildi!', 'shazam': '🎵 Şarkı Bul', 'dl': '📥 Video/Müzik İndir', 'help': '🆘 Yardım', 'wait': 'İndiriliyor... ⏳', 'find': 'Aranıyor... 🔎', 'not_found': 'Maalesef bulunamadı 😕', 'error': 'Bir hata oluştu! ❌', 'voice_req': '🎤 Şarkıyı bulmak için ses kaydı gönderin.', 'link_req': '📥 İndirmek için bağlantı veya şarkı ismi gönderin.', 'thanks': 'Yardımcı olduğuma sevindim! ❤️', 'ask_audio': '🎬 Video hazır! Müziğini de (MP3) ister misin?', 'get_audio': '🎵 Evet, MP3 indir'},
@@ -45,7 +46,7 @@ LANGUAGES = {
     'es': {'name': '🇪🇸 Español', 'start': '¡Idioma elegido!', 'shazam': '🎵 Buscar canción', 'dl': '📥 Descargar', 'help': '🆘 Ayuda', 'wait': 'Descargando... ⏳', 'find': 'Buscando... 🔎', 'not_found': 'No encontrado 😕', 'error': '¡Error! ❌', 'voice_req': '🎤 Envía una nota de voz.', 'link_req': '📥 Envía un enlace.', 'thanks': '¡Feliz de ayudar! ❤️', 'ask_audio': '🎬 ¡Vídeo listo! ¿MP3 también?', 'get_audio': '🎵 Sí, MP3'},
     'it': {'name': '🇮🇹 Italiano', 'start': 'Lingua scelta!', 'shazam': '🎵 Trova canzone', 'dl': '📥 Scarica', 'help': '🆘 Ayuto', 'wait': 'Caricamento... ⏳', 'find': 'Ricerca... 🔎', 'not_found': 'Non trovato 😕', 'error': 'Errore! ❌', 'voice_req': '🎤 Invia un messaggio vocale.', 'link_req': '🇮🇹 Invia un link.', 'thanks': 'Felice di aiutarti! ❤️', 'ask_audio': '🎬 Video pronto! MP3?', 'get_audio': '🎵 Sì, MP3'},
     'ar': {'name': '🇸🇦 العربية', 'start': 'تم اختيار اللغة!', 'shazam': '🎵 البحث عن أغنية', 'dl': '📥 تحميل فيديو/موسيقى', 'help': '🆘 مساعدة', 'wait': 'جاري التحميل... ⏳', 'find': 'جari البحث... 🔎', 'not_found': 'لم يتم العثور عليه 😕', 'error': 'خطأ! ❌', 'voice_req': '🎤 أرسل رسالة صوتية للبحث.', 'link_req': '📥 أرسل الرابط.', 'thanks': 'سعيد بمساعدتك! ❤️', 'ask_audio': '🎬 الفيديو جاهز! هل تريد MP3؟', 'get_audio': '🎵 نعم، تحميل'},
-    'ua': {'name': '🇺🇦 Українська', 'start': 'Мову обрано!', 'shazam': '🎵 Знайти пісню', 'dl': '📥 Завантажити', 'help': '🆘 Допомога', 'wait': 'Завантаження... ⏳', 'find': 'Поиск... 🔎', 'not_found': 'Не знайдено 😕', 'error': 'Помилка! ❌', 'voice_req': '🎤 Надішліть голосове повідомлення.', 'link_req': '📥 Надішліть посилання.', 'thanks': 'Радий допомогти! ❤️', 'ask_audio': '🎬 Відео готове! MP3?', 'get_audio': '🎵 Так, MP3'}
+    'ua': {'name': '🇺🇦 Українська', 'start': 'Мову обрано!', 'shazam': '🎵 Знайти пісню', 'dl': '📥 Завантажити', 'help': '🆘 Допомога', 'wait': 'Завантаження... ⏳', 'find': 'Поиск... 🔎', 'not_found': 'Не знайдеno 😕', 'error': 'Помилка! ❌', 'voice_req': '🎤 Надішліть голосове повідомлення.', 'link_req': '📥 Надішліть посилання.', 'thanks': 'Радий допомогти! ❤️', 'ask_audio': '🎬 Відео готове! MP3?', 'get_audio': '🎵 Так, MP3'}
 }
 
 user_prefs = {}
@@ -86,6 +87,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton(v['name'], callback_data=f"l_{k}")] for k, v in LANGUAGES.items()
     ]))
 
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("👨‍💻 Admin", url=f"https://t.me/{ADMIN_USERNAME}")]])
+    await update.message.reply_text("Problem yarandı? Adminlə əlaqə saxlayın:", reply_markup=keyboard)
+
 async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user_id = query.from_user.id
@@ -98,28 +103,26 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_prefs[user_id] = lang
         await query.edit_message_text(text=LANGUAGES[lang]['start'], reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton(LANGUAGES[lang]['shazam'], callback_data='act_shazam')],
-            [InlineKeyboardButton(LANGUAGES[lang]['dl'], callback_data='act_dl')]
+            [InlineKeyboardButton(LANGUAGES[lang]['dl'], callback_data='act_dl')],
+            [InlineKeyboardButton(LANGUAGES[lang]['help'], callback_data='act_help')]
         ]))
         
     elif query.data == 'act_shazam': await query.message.reply_text(l['voice_req'])
     elif query.data == 'act_dl': await query.message.reply_text(l['link_req'])
+    elif query.data == 'act_help':
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("👨‍💻 Admin", url=f"https://t.me/{ADMIN_USERNAME}")]])
+        await query.message.reply_text("Adminlə əlaqə saxlayın:", reply_markup=keyboard)
     
     elif query.data == 'getmp3_now':
         original_query = context.user_data.get('last_query')
         if not original_query: return
-
-        # 1. Təsadüfi stiker göndər
         sticker_msg = await context.bot.send_sticker(chat_id=query.message.chat_id, sticker=random.choice(STICKER_LIST))
-        
-        # 2. Üstdə "Audio göndərilir" statusu
         await context.bot.send_chat_action(chat_id=query.message.chat_id, action="upload_document")
-        
         audio = await download_audio(original_query)
         if audio:
             with open(audio, 'rb') as f:
                 await context.bot.send_audio(chat_id=query.message.chat_id, audio=f, caption=f"🎵 {BOT_USERNAME}")
             os.remove(audio)
-            # 3. Bitəndə stikeri sil
             await context.bot.delete_message(chat_id=query.message.chat_id, message_id=sticker_msg.message_id)
         else:
             await query.message.reply_text(l['error'])
@@ -141,7 +144,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         with open(video, 'rb') as vf:
             await context.bot.send_video(chat_id=update.message.chat_id, video=vf, caption=f"✅ {l['thanks']}\n\n🤖 {BOT_USERNAME}")
         os.remove(video)
-        
         keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(l['get_audio'], callback_data='getmp3_now')]])
         await update.message.reply_text(l['ask_audio'], reply_markup=keyboard)
         try: await update.message.set_reaction(reaction="✅")
@@ -154,6 +156,7 @@ def main():
     keep_alive()
     app = Application.builder().token(TOKEN).connect_timeout(40).read_timeout(40).write_timeout(40).build()
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CallbackQueryHandler(callback_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.run_polling(drop_pending_updates=True)
