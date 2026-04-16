@@ -23,7 +23,7 @@ def keep_alive():
 TOKEN = "8706775383:AAH1666R0aetr06kiur612nxXgfiklj-H8E"
 AUDD_API_KEY = "1beceba87cfc9c253cee5787c2513e65"
 BOT_USERNAME = "@SonicDownloaderBot"
-ADMIN_USERNAME = "umud_hasanov" # Sənin hesabına yönləndirmə üçün
+ADMIN_USERNAME = "UmudHasanovTM" # Sənin hesabına yönləndirmə üçün
 
 # SƏNİN GÖNDƏRDİYİN STİKER ID-LƏRİ
 STICKER_LIST = [
