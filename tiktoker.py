@@ -51,10 +51,10 @@ LANGUAGES = {
         'thanks': 'Happy to help! ❤️', 'ask_audio': '🎬 Video is ready! Do you want the audio (MP3) too?', 'get_audio': '🎵 Yes, download MP3'
     }
 }
-# Digər dillər eyni məntiqlə bura əlavə oluna bilər.
 
 user_prefs = {}
 
+# --- FUNKSİYALAR ---
 def get_main_buttons(lang_code):
     l = LANGUAGES.get(lang_code, LANGUAGES['az'])
     return InlineKeyboardMarkup([
@@ -73,19 +73,15 @@ def get_lang_keyboard():
         keyboard.append(row)
     return InlineKeyboardMarkup(keyboard)
 
-# --- PROSESLƏR ---
 async def download_video(query):
     if not query.startswith("http"):
         query = f"ytsearch1:{query}"
-    
     v_file = "video.mp4"
     if os.path.exists(v_file): os.remove(v_file)
-
     opts = {
         'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
         'outtmpl': 'video.%(ext)s',
-        'quiet': True,
-        'noplaylist': True,
+        'quiet': True, 'noplaylist': True,
         'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'extractor_args': {'tiktok': {'impersonate': True}},
     }
@@ -98,17 +94,13 @@ async def download_video(query):
 async def download_audio(query):
     if not query.startswith("http"):
         query = f"ytsearch1:{query}"
-        
     a_file = "audio.mp3"
     if os.path.exists("audio.mp3"): os.remove("audio.mp3")
-
     opts = {
         'format': 'bestaudio/best',
         'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3', 'preferredquality': '192'}],
         'outtmpl': 'audio',
-        'quiet': True,
-        'noplaylist': True,
-        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'quiet': True, 'noplaylist': True,
     }
     try:
         loop = asyncio.get_event_loop()
@@ -140,9 +132,12 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.message.reply_text(l['link_req'])
         
     elif query.data.startswith('getmp3_'):
-        # Callback data limitinə görə burada bəzən problem ola bilər, 
-        # amma link qısadırsa işləyəcək. Alternativ olaraq son mesajı yadda saxlayırıq.
-        original_query = query.data.replace('getmp3_', '')
+        # Düyməyə basıldıqda yalnız audio yüklənir
+        original_query = context.user_data.get('last_query')
+        if not original_query:
+            await query.message.reply_text("Məlumat tapılmadı. Zəhmət olmasa linki yenidən göndərin.")
+            return
+
         await query.message.reply_text(l['wait'])
         audio = await download_audio(original_query)
         if audio:
@@ -158,15 +153,18 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     l = LANGUAGES.get(lang, LANGUAGES['az'])
     text = update.message.text
 
+    # Son göndərilən linki yadda saxlayırıq ki, audio istəyəndə istifadə edək
+    context.user_data['last_query'] = text
+
     try: await update.message.set_reaction(reaction="👀")
     except: pass
     
     await context.bot.send_chat_action(chat_id=update.message.chat_id, action="upload_video")
 
-    # Yalnız videonu yükləyirik
     video = await download_video(text)
 
     if video:
+        # 1. Videonu göndər
         with open(video, 'rb') as vf:
             await context.bot.send_video(
                 chat_id=update.message.chat_id, 
@@ -175,9 +173,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         os.remove(video)
         
-        # Video göndərildikdən sonra audio istəyib-istəmədiyini soruşuruq
+        # 2. Audio sualını göndər (DİQQƏT: Musiqini bura əlavə etmirik!)
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton(l['get_audio'], callback_data=f"getmp3_{text[:40]}")] # Limitə görə qısaldırıq
+            [InlineKeyboardButton(l['get_audio'], callback_data=f"getmp3_now")]
         ])
         await update.message.reply_text(l['ask_audio'], reply_markup=keyboard)
         
@@ -195,13 +193,15 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     path = f"s_{user_id}.ogg"
     await file.download_to_drive(path)
     
-    # API açarını yoxla
-    res = requests.post('https://api.audd.io/', data={'api_token': AUDD_API_KEY}, files={'file': open(path, 'rb')}).json()
-    if res.get('status') == 'success' and res.get('result'):
-        r = res['result']
-        await msg.edit_text(f"🎧 {r['title']} - {r['artist']}", reply_markup=get_main_buttons(lang))
-    else:
-        await msg.edit_text(l['not_found'], reply_markup=get_main_buttons(lang))
+    try:
+        res = requests.post('https://api.audd.io/', data={'api_token': AUDD_API_KEY}, files={'file': open(path, 'rb')}).json()
+        if res.get('status') == 'success' and res.get('result'):
+            r = res['result']
+            await msg.edit_text(f"🎧 {r['title']} - {r['artist']}", reply_markup=get_main_buttons(lang))
+        else:
+            await msg.edit_text(l['not_found'], reply_markup=get_main_buttons(lang))
+    except:
+        await msg.edit_text(l['error'])
         
     if os.path.exists(path): os.remove(path)
 
