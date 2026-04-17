@@ -124,7 +124,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != ADMIN_ID: return
     db = load_db()
-    await update.message.reply_text(f"📊 **Statistika**\n\n👤 İstifadəçi sayı: {len(db['users'])}\n📥 Cəmi yükləmə: {db['total_downloads']}")
+    await update.message.reply_text(f"📊 **Umud Müəllim Buyurun**\n\n👤 İstifadəçi sayı: {len(db['users'])}\n📥 Cəmi yükləmə: {db['total_downloads']}")
 
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != ADMIN_ID: return
