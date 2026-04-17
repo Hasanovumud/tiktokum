@@ -4,7 +4,7 @@ import yt_dlp
 import asyncio
 import requests
 import random
-import json
+import json # Statistika üçün əlavə edildi
 from flask import Flask
 from threading import Thread
 
@@ -25,8 +25,9 @@ TOKEN = "8706775383:AAH1666R0aetr06kiur612nxXgfiklj-H8E"
 AUDD_API_KEY = "1beceba87cfc9c253cee5787c2513e65"
 BOT_USERNAME = "@SonicDownloaderBot"
 ADMIN_USERNAME = "UmudHasanovTM"
-ADMIN_ID = 8446711093
+ADMIN_ID = 8446711093  # Admin paneli üçün sənin ID-n
 
+# SƏNİN GÖNDƏRDİYİN STİKER ID-LƏRİ
 STICKER_LIST = [
     "CAACAgIAAxkBAAIefGngpL4tARSbMMqODfBvfOgBYhShAAIGlwACuWuhS33nS5UJOVG-OwQv",
     "CAACAgIAAxkBAAIeeGngpLrfYaVojr2xEiEmJa9ZXD8TAAJsQAACSUzRSqhPVcf-QsDwOwQ",
@@ -36,8 +37,9 @@ STICKER_LIST = [
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-# --- STATİSTİKA ---
+# --- STATİSTİKA VƏ ADMİN FUNKSİYALARI ---
 DB_FILE = "users_db.json"
+
 def load_db():
     if os.path.exists(DB_FILE):
         with open(DB_FILE, "r") as f: return json.load(f)
@@ -57,87 +59,96 @@ def log_download():
     db["total_downloads"] += 1
     save_db(db)
 
-# --- DİLLƏR ---
+# --- BÜTÜN DİLLƏR ---
 LANGUAGES = {
     'az': {'name': '🇦🇿 Azərbaycan', 'start': 'Dil seçildi!', 'shazam': '🎵 Mahnı Tap', 'dl': '📥 Video/Mahnı Yüklə', 'help': '🆘 Kömək', 'wait': 'Yüklənir... ⏳', 'find': 'Axtarılır... 🔎', 'not_found': 'Təəssüf ki, tapılmadı 😕', 'error': 'Xəta baş verdi! ❌', 'voice_req': '🎤 Mahnını tapmaq üçün səs yazısı göndərin.', 'link_req': '📥 Yükləmək üçün link və ya mahnı adı göndərin.', 'thanks': 'Kömək etdiyimə şadam! ❤️', 'ask_audio': '🎬 Video hazırdır! Mahnısını da (MP3) istəyirsən?', 'get_audio': '🎵 Bəli, MP3 yüklə'},
     'tr': {'name': '🇹🇷 Türkçe', 'start': 'Dil seçildi!', 'shazam': '🎵 Şarkı Bul', 'dl': '📥 Video/Müzik İndir', 'help': '🆘 Yardım', 'wait': 'İndiriliyor... ⏳', 'find': 'Aranıyor... 🔎', 'not_found': 'Maalesef bulunamadı 😕', 'error': 'Bir hata oluştu! ❌', 'voice_req': '🎤 Şarkıyı bulmak için ses kaydı gönderin.', 'link_req': '📥 İndirmek için bağlantı veya şarkı ismi gönderin.', 'thanks': 'Yardımcı olduğuma sevindim! ❤️', 'ask_audio': '🎬 Video hazır! Müziğini de (MP3) ister misin?', 'get_audio': '🎵 Evet, MP3 indir'},
-    'en': {'name': '🇺🇸 English', 'start': 'Language set!', 'shazam': '🎵 Find Song', 'dl': '📥 Download Media', 'help': '🆘 Help', 'wait': 'Downloading... ⏳', 'find': 'Searching... 🔎', 'not_found': 'Not found 😕', 'error': 'Error occurred! ❌', 'voice_req': '🎤 Send a voice note.', 'link_req': '📥 Send a link or song name.', 'thanks': 'Happy to help! ❤️', 'ask_audio': '🎬 Video is ready! Do you want the audio (MP3) too?', 'get_audio': '🎵 Yes, download MP3'}
+    'en': {'name': '🇺🇸 English', 'start': 'Language set!', 'shazam': '🎵 Find Song', 'dl': '📥 Download Media', 'help': '🆘 Help', 'wait': 'Downloading... ⏳', 'find': 'Searching... 🔎', 'not_found': 'Not found 😕', 'error': 'Error occurred! ❌', 'voice_req': '🎤 Send a voice note.', 'link_req': '📥 Send a link or song name.', 'thanks': 'Happy to help! ❤️', 'ask_audio': '🎬 Video is ready! Do you want the audio (MP3) too?', 'get_audio': '🎵 Yes, download MP3'},
+    'ru': {'name': '🇷🇺 Русский', 'start': 'Язык выбран!', 'shazam': '🎵 Найти песню', 'dl': '📥 Скачать', 'help': '🆘 Помощь', 'wait': 'Загрузка... ⏳', 'find': 'Поиск... 🔎', 'not_found': 'Не найдено 😕', 'error': 'Ошибка! ❌', 'voice_req': '🎤 Отправьте голос.', 'link_req': '📥 Отправьте ссылку.', 'thanks': 'Рад помочь! ❤️', 'ask_audio': '🎬 Видео готово! Хотите аудио (MP3)?', 'get_audio': '🎵 Да, скачать MP3'},
+    'de': {'name': '🇩🇪 Deutsch', 'start': 'Sprache gewählt!', 'shazam': '🎵 Lied finden', 'dl': '📥 Video/Musik laden', 'help': '🆘 Hilfe', 'wait': 'Lädt... ⏳', 'find': 'Suche... 🔎', 'not_found': 'Nicht gefunden 😕', 'error': 'Fehler! ❌', 'voice_req': '🎤 Sende eine Sprachnachricht.', 'link_req': '📥 Sende einen Link.', 'thanks': 'Gerne geschehen! ❤️', 'ask_audio': '🎬 Video fertig! MP3 auch?', 'get_audio': '🎵 Ja, MP3'},
+    'fr': {'name': '🇫🇷 Français', 'start': 'Langue choisie!', 'shazam': '🎵 Trouver chanson', 'dl': '📥 Télécharger', 'help': '🆘 Aide', 'wait': 'Chargement... ⏳', 'find': 'Recherche... 🔎', 'not_found': 'Pas trouvé 😕', 'error': 'Erreur! ❌', 'voice_req': '🎤 Envoyez un message vocal.', 'link_req': '📥 Envoyez un lien.', 'thanks': 'Content d\'aider! ❤️', 'ask_audio': '🎬 Vidéo prête! MP3 aussi?', 'get_audio': '🎵 Oui, MP3'},
+    'es': {'name': '🇪🇸 Español', 'start': '¡Idioma elegido!', 'shazam': '🎵 Buscar canción', 'dl': '📥 Descargar', 'help': '🆘 Ayuda', 'wait': 'Descargando... ⏳', 'find': 'Buscando... 🔎', 'not_found': 'No encontrado 😕', 'error': '¡Error! ❌', 'voice_req': '🎤 Envía una nota de voz.', 'link_req': '📥 Envía un enlace.', 'thanks': '¡Feliz de ayudar! ❤️', 'ask_audio': '🎬 ¡Vídeo listo! ¿MP3 también?', 'get_audio': '🎵 Sí, MP3'},
+    'it': {'name': '🇮🇹 Italiano', 'start': 'Lingua scelta!', 'shazam': '🎵 Trova canzone', 'dl': '📥 Scarica', 'help': '🆘 Ayuto', 'wait': 'Caricamento... ⏳', 'find': 'Ricerca... 🔎', 'not_found': 'Non trovato 😕', 'error': 'Errore! ❌', 'voice_req': '🎤 Invia un messaggio vocale.', 'link_req': '🇮🇹 Invia un link.', 'thanks': 'Felice di aiutarti! ❤️', 'ask_audio': '🎬 Video pronto! MP3?', 'get_audio': '🎵 Sì, MP3'},
+    'ar': {'name': '🇸🇦 العربية', 'start': 'تم اختيار اللغة!', 'shazam': '🎵 البحث عن أغنية', 'dl': '📥 تحميل فيديو/موسيقى', 'help': '🆘 مساعدة', 'wait': 'جاري التحميل... ⏳', 'find': 'جari البحث... 🔎', 'not_found': 'لم يتم العثور عليه 😕', 'error': 'خطأ! ❌', 'voice_req': '🎤 أرسل رسالة صوتية للبحث.', 'link_req': '📥 أرسل الرابط.', 'thanks': 'سعيد بمساعدتك! ❤️', 'ask_audio': '🎬 الفيديو جاهز! هل تريد MP3؟', 'get_audio': '🎵 نعم، تحميل'},
+    'ua': {'name': '🇺🇦 Українська', 'start': 'Мову обрано!', 'shazam': '🎵 Знайти пісню', 'dl': '📥 Завантажити', 'help': '🆘 Допомога', 'wait': 'Завантаження... ⏳', 'find': 'Поиск... 🔎', 'not_found': 'Не знайдеno 😕', 'error': 'Помилка! ❌', 'voice_req': '🎤 Надішліть голосове повідомлення.', 'link_req': '📥 Надішліть посилання.', 'thanks': 'Радий допомогти! ❤️', 'ask_audio': '🎬 Відео готове! MP3?', 'get_audio': '🎵 Так, MP3'}
 }
 
 user_prefs = {}
 
-# --- YÜKLƏMƏ FUNKSİYALARI (BLOKLARI KEÇMƏK ÜÇÜN) ---
-def get_ytdlp_opts(is_audio=False):
-    opts = {
-        'quiet': True,
-        'noplaylist': True,
-        'nocheckcertificate': True,
-        'no_warnings': True,
-        'cookiefile': 'cookies.txt' if os.path.exists('cookies.txt') else None,
-        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-    }
-    if is_audio:
-        opts.update({
-            'format': 'bestaudio/best',
-            'outtmpl': 'audio.%(ext)s',
-        })
-    else:
-        opts.update({
-            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-            'outtmpl': 'video.%(ext)s',
-        })
-    return opts
-
+# --- FUNKSİYALAR ---
 async def download_video(query):
-    opts = get_ytdlp_opts(is_audio=False)
+    # Köhnə faylları təmizləyirik
+    for f in ["video.mp4", "video.webm", "video.mkv"]:
+        if os.path.exists(f): os.remove(f)
+        
+    opts = {
+        'format': 'best[ext=mp4]/best', # Render-də ffmpeg problemi olmasın deyə birbaşa mp4 axtarır
+        'outtmpl': 'video.%(ext)s', 'quiet': True, 'noplaylist': True,
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'extractor_args': {'tiktok': {'impersonate': True}},
+    }
     try:
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts).download([query if query.startswith("http") else f"ytsearch1:{query}"]))
+        
+        # Hansı formatda endiyini tapırıq
         for ext in ['mp4', 'webm', 'mkv']:
-            if os.path.exists(f"video.{ext}"): return f"video.{ext}"
+            if os.path.exists(f"video.{ext}"):
+                return f"video.{ext}"
+        return None
     except: return None
 
 async def download_audio(query):
-    opts = get_ytdlp_opts(is_audio=True)
+    # Köhnə faylları təmizləyirik
+    for f in ["audio.mp3", "audio.m4a", "audio.webm", "audio.opus"]:
+        if os.path.exists(f): os.remove(f)
+        
+    opts = {
+        'format': 'bestaudio[ext=m4a]/bestaudio/best', # Render-də ffmpeg yoxdursa mp3-ə çevirə bilmir, ona görə m4a yükləyirik (Teleqram dəstəkləyir)
+        'outtmpl': 'audio.%(ext)s', 'quiet': True, 'noplaylist': True,
+    }
     try:
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts).download([query if query.startswith("http") else f"ytsearch1:{query}"]))
+        
         for ext in ['m4a', 'mp3', 'webm', 'opus']:
-            if os.path.exists(f"audio.{ext}"): return f"audio.{ext}"
+            if os.path.exists(f"audio.{ext}"):
+                return f"audio.{ext}"
+        return None
     except: return None
 
 # --- HANDLERS ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    log_user(update.effective_user.id)
+    log_user(update.effective_user.id) # İd qeyd olunur
     await update.message.reply_text("Dil seçin / Choose language:", reply_markup=InlineKeyboardMarkup([
         [InlineKeyboardButton(v['name'], callback_data=f"l_{k}")] for k, v in LANGUAGES.items()
     ]))
 
-async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
-    lang = user_prefs.get(user_id, 'az')
-    l = LANGUAGES.get(lang, LANGUAGES['az'])
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("👨‍💻 Admin", url=f"https://t.me/{ADMIN_USERNAME}")]])
+    await update.message.reply_text("Problem yarandı? Adminlə əlaqə saxlayın:", reply_markup=keyboard)
+
+# --- ADMİN PANEL ƏMRLƏRİ ---
+async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id != ADMIN_ID: return
+    db = load_db()
+    await update.message.reply_text(f"📊 **Statistika**\n\n👤 İstifadəçi sayı: {len(db['users'])}\n📥 Cəmi yükləmə: {db['total_downloads']}")
+
+async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id != ADMIN_ID: return
+    if not context.args:
+        await update.message.reply_text("İstifadə: `/send mesaj`", parse_mode="Markdown")
+        return
     
-    wait_msg = await update.message.reply_text(l['find'])
-    file = await context.bot.get_file(update.message.voice.file_id if update.message.voice else update.message.audio.file_id)
-    path = "shazam_temp.ogg"
-    await file.download_to_drive(path)
-    
-    try:
-        with open(path, 'rb') as f:
-            res = requests.post('https://api.audd.io/', data={'api_token': AUDD_API_KEY}, files={'file': f}).json()
-        
-        if res.get('result'):
-            result = res['result']
-            query = f"{result['artist']} - {result['title']}"
-            context.user_data['last_query'] = query
-            await wait_msg.edit_text(f"🎵 {query}\n\n{l['ask_audio']}", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(l['get_audio'], callback_data='getmp3_now')]]))
-        else:
-            await wait_msg.edit_text(l['not_found'])
-    except:
-        await wait_msg.edit_text(l['error'])
-    finally:
-        if os.path.exists(path): os.remove(path)
+    msg = " ".join(context.args)
+    db = load_db()
+    count = 0
+    for uid in db["users"]:
+        try:
+            await context.bot.send_message(chat_id=uid, text=msg)
+            count += 1
+        except: pass
+    await update.message.reply_text(f"✅ Mesaj {count} nəfərə göndərildi.")
 
 async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -149,50 +160,131 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if query.data.startswith('l_'):
         lang = query.data.split('_')[1]
         user_prefs[user_id] = lang
-        await query.edit_message_text(text=l['start'], reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton(l['shazam'], callback_data='act_shazam')],
-            [InlineKeyboardButton(l['dl'], callback_data='act_dl')]
+        await query.edit_message_text(text=LANGUAGES[lang]['start'], reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton(LANGUAGES[lang]['shazam'], callback_data='act_shazam')],
+            [InlineKeyboardButton(LANGUAGES[lang]['dl'], callback_data='act_dl')],
+            [InlineKeyboardButton(LANGUAGES[lang]['help'], callback_data='act_help')]
         ]))
+        
     elif query.data == 'act_shazam': await query.message.reply_text(l['voice_req'])
     elif query.data == 'act_dl': await query.message.reply_text(l['link_req'])
+    elif query.data == 'act_help':
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("👨‍💻 Admin", url=f"https://t.me/{ADMIN_USERNAME}")]])
+        await query.message.reply_text("Adminlə əlaqə saxlayın:", reply_markup=keyboard)
+    
     elif query.data == 'getmp3_now':
-        last_q = context.user_data.get('last_query')
-        if not last_q: return
-        sticker = await context.bot.send_sticker(chat_id=query.message.chat_id, sticker=random.choice(STICKER_LIST))
-        audio = await download_audio(last_q)
+        original_query = context.user_data.get('last_query')
+        if not original_query: return
+        sticker_msg = await context.bot.send_sticker(chat_id=query.message.chat_id, sticker=random.choice(STICKER_LIST))
+        await context.bot.send_chat_action(chat_id=query.message.chat_id, action="upload_document")
+        audio = await download_audio(original_query)
         if audio:
-            log_download()
-            with open(audio, 'rb') as f: await context.bot.send_audio(chat_id=query.message.chat_id, audio=f, caption=f"🎵 {BOT_USERNAME}")
+            log_download() # Yükləmə qeydi
+            with open(audio, 'rb') as f:
+                await context.bot.send_audio(chat_id=query.message.chat_id, audio=f, caption=f"🎵 {BOT_USERNAME}")
             os.remove(audio)
-        await context.bot.delete_message(chat_id=query.message.chat_id, message_id=sticker.message_id)
+            await context.bot.delete_message(chat_id=query.message.chat_id, message_id=sticker_msg.message_id)
+        else:
+            await query.message.reply_text(l['error'])
+
+# --- SHAZAM FUNKSİYASI ---
+async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.message.from_user.id
+    log_user(user_id)
+    lang = user_prefs.get(user_id, 'az')
+    l = LANGUAGES.get(lang, LANGUAGES['az'])
+    
+    await update.message.reply_text(l['find'])
+    
+    # Səs və ya audio faylını götürürük
+    if update.message.voice:
+        file_id = update.message.voice.file_id
+        ext = "ogg"
+    else:
+        file_id = update.message.audio.file_id
+        ext = "mp3"
+        
+    file = await context.bot.get_file(file_id)
+    file_path = f"voice.{ext}"
+    await file.download_to_drive(file_path)
+    
+    # AudD API sorğusu
+    data = {
+        'api_token': AUDD_API_KEY,
+        'return': 'apple_music,spotify',
+    }
+    files = {
+        'file': open(file_path, 'rb'),
+    }
+    
+    try:
+        response = requests.post('https://api.audd.io/', data=data, files=files)
+        result = response.json()
+        
+        if result.get('status') == 'success' and result.get('result'):
+            song = result['result']
+            artist = song.get('artist')
+            title = song.get('title')
+            query = f"{artist} - {title}"
+            context.user_data['last_query'] = query
+            
+            await update.message.reply_text(
+                f"🎵 {query}\n\n{l['ask_audio']}", 
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(l['get_audio'], callback_data='getmp3_now')]])
+            )
+        else:
+            await update.message.reply_text(l['not_found'])
+    except Exception as e:
+        await update.message.reply_text(l['error'])
+    finally:
+        if os.path.exists(file_path):
+            os.remove(file_path)
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
+    user_id = update.message.from_user.id
+    log_user(user_id) # İd qeyd olunur
     lang = user_prefs.get(user_id, 'az')
     l = LANGUAGES.get(lang, LANGUAGES['az'])
     text = update.message.text
     context.user_data['last_query'] = text
+
+    try: await update.message.set_reaction(reaction="👀")
+    except: pass
     
-    wait_msg = await update.message.reply_text(l['wait'])
+    await context.bot.send_chat_action(chat_id=update.message.chat_id, action="upload_video")
     video = await download_video(text)
-    
+
     if video:
-        log_download()
-        with open(video, 'rb') as f: await context.bot.send_video(chat_id=update.message.chat_id, video=f, caption=f"✅ {l['thanks']}")
+        log_download() # Yükləmə qeydi
+        with open(video, 'rb') as vf:
+            await context.bot.send_video(chat_id=update.message.chat_id, video=vf, caption=f"✅ {l['thanks']}\n\n🤖 {BOT_USERNAME}")
         os.remove(video)
-        await update.message.reply_text(l['ask_audio'], reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(l['get_audio'], callback_data='getmp3_now')]]))
-        await wait_msg.delete()
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(l['get_audio'], callback_data='getmp3_now')]])
+        await update.message.reply_text(l['ask_audio'], reply_markup=keyboard)
+        try: await update.message.set_reaction(reaction="✅")
+        except: pass
     else:
-        await wait_msg.edit_text(l['error'])
+        await update.message.reply_text(l['error'])
 
 # --- MAIN ---
 def main():
     keep_alive()
-    app = Application.builder().token(TOKEN).build()
+    app = Application.builder().token(TOKEN).connect_timeout(40).read_timeout(40).write_timeout(40).build()
+    
+    # Handlerlər
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("stats", stats))     # Statistika əmri
+    app.add_handler(CommandHandler("send", broadcast)) # Mesaj göndərmə əmri
+    
     app.add_handler(CallbackQueryHandler(callback_handler))
+    
+    # Səsli mesajlar və normal audiolarda musiqi tapmaq üçün handler
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
+    
+    # Mətn mesajları (linklər və axtarışlar) üçün handler
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    
     app.run_polling(drop_pending_updates=True)
 
 if __name__ == "__main__": main()
