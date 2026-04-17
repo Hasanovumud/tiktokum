@@ -5,8 +5,6 @@ import asyncio
 import requests
 import random
 import json # Statistika üçün əlavə edildi
-import uuid # Unikal fayl adları üçün
-import glob # Faylların tapılması üçün
 from flask import Flask
 from threading import Thread
 
@@ -79,10 +77,13 @@ user_prefs = {}
 
 # --- FUNKSİYALAR ---
 async def download_video(query):
-    unique_id = uuid.uuid4().hex[:8] # Yarış vəziyyətinin qarşısını almaq üçün unikal id
+    # Köhnə faylları təmizləyirik
+    for f in ["video.mp4", "video.webm", "video.mkv"]:
+        if os.path.exists(f): os.remove(f)
+        
     opts = {
-        'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-        'outtmpl': f'video_{unique_id}.%(ext)s', 'quiet': True, 'noplaylist': True,
+        'format': 'best[ext=mp4]/best', # Render-də ffmpeg problemi olmasın deyə birbaşa mp4 axtarır
+        'outtmpl': 'video.%(ext)s', 'quiet': True, 'noplaylist': True,
         'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'extractor_args': {'tiktok': {'impersonate': True}},
     }
@@ -90,25 +91,30 @@ async def download_video(query):
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts).download([query if query.startswith("http") else f"ytsearch1:{query}"]))
         
-        # Yüklənmiş unikal faylı tapırıq
-        files = glob.glob(f"video_{unique_id}.*")
-        return files[0] if files else None
+        # Hansı formatda endiyini tapırıq
+        for ext in ['mp4', 'webm', 'mkv']:
+            if os.path.exists(f"video.{ext}"):
+                return f"video.{ext}"
+        return None
     except: return None
 
 async def download_audio(query):
-    unique_id = uuid.uuid4().hex[:8]
+    # Köhnə faylları təmizləyirik
+    for f in ["audio.mp3", "audio.m4a", "audio.webm", "audio.opus"]:
+        if os.path.exists(f): os.remove(f)
+        
     opts = {
-        'format': 'bestaudio/best',
-        'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3', 'preferredquality': '192'}],
-        'outtmpl': f'audio_{unique_id}', 'quiet': True, 'noplaylist': True,
+        'format': 'bestaudio[ext=m4a]/bestaudio/best', # Render-də ffmpeg yoxdursa mp3-ə çevirə bilmir, ona görə m4a yükləyirik (Teleqram dəstəkləyir)
+        'outtmpl': 'audio.%(ext)s', 'quiet': True, 'noplaylist': True,
     }
     try:
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts).download([query if query.startswith("http") else f"ytsearch1:{query}"]))
         
-        # Audio mp3 formatına çevrildiyi üçün sonluq bəllidir
-        files = glob.glob(f"audio_{unique_id}.*")
-        return files[0] if files else None
+        for ext in ['m4a', 'mp3', 'webm', 'opus']:
+            if os.path.exists(f"audio.{ext}"):
+                return f"audio.{ext}"
+        return None
     except: return None
 
 # --- HANDLERS ---
@@ -181,64 +187,59 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             await query.message.reply_text(l['error'])
 
-# --- SHAZAM (SƏSLƏ MAHNINI TAPMAQ) ---
+# --- SHAZAM FUNKSİYASI ---
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     log_user(user_id)
     lang = user_prefs.get(user_id, 'az')
     l = LANGUAGES.get(lang, LANGUAGES['az'])
     
-    try: await update.message.set_reaction(reaction="👀")
-    except: pass
-    
     await update.message.reply_text(l['find'])
     
+    # Səs və ya audio faylını götürürük
+    if update.message.voice:
+        file_id = update.message.voice.file_id
+        ext = "ogg"
+    else:
+        file_id = update.message.audio.file_id
+        ext = "mp3"
+        
+    file = await context.bot.get_file(file_id)
+    file_path = f"voice.{ext}"
+    await file.download_to_drive(file_path)
+    
+    # AudD API sorğusu
+    data = {
+        'api_token': AUDD_API_KEY,
+        'return': 'apple_music,spotify',
+    }
+    files = {
+        'file': open(file_path, 'rb'),
+    }
+    
     try:
-        # Səs yazısı və ya audio faylı olub olmadığını yoxlayırıq
-        file_id = update.message.voice.file_id if update.message.voice else update.message.audio.file_id
-        voice_file = await context.bot.get_file(file_id)
+        response = requests.post('https://api.audd.io/', data=data, files=files)
+        result = response.json()
         
-        unique_id = uuid.uuid4().hex[:8]
-        file_path = f"voice_{unique_id}.ogg"
-        await voice_file.download_to_drive(file_path)
-        
-        data = {
-            'api_token': AUDD_API_KEY,
-            'return': 'apple_music,spotify',
-        }
-        
-        with open(file_path, 'rb') as f:
-            response = requests.post('https://api.audd.io/', data=data, files={'file': f})
-        
-        res_json = response.json()
-        if res_json.get('status') == 'success' and res_json.get('result'):
-            result = res_json['result']
-            title = result.get('title', 'Naməlum')
-            artist = result.get('artist', 'Naməlum')
+        if result.get('status') == 'success' and result.get('result'):
+            song = result['result']
+            artist = song.get('artist')
+            title = song.get('title')
+            query = f"{artist} - {title}"
+            context.user_data['last_query'] = query
             
-            # Sənə məxsus stikerlərdən birini atır
-            await context.bot.send_sticker(chat_id=update.message.chat_id, sticker=random.choice(STICKER_LIST))
-            
-            await update.message.reply_text(f"🎵 {artist} - {title}")
-            
-            # Tapılmış musiqini yükləmək istəyib-istəmədiyini soruşur
-            context.user_data['last_query'] = f"{artist} {title}"
-            keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(l['get_audio'], callback_data='getmp3_now')]])
-            await update.message.reply_text(l['ask_audio'], reply_markup=keyboard)
-            
-            try: await update.message.set_reaction(reaction="✅")
-            except: pass
+            await update.message.reply_text(
+                f"🎵 {query}\n\n{l['ask_audio']}", 
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(l['get_audio'], callback_data='getmp3_now')]])
+            )
         else:
             await update.message.reply_text(l['not_found'])
-            
+    except Exception as e:
+        await update.message.reply_text(l['error'])
+    finally:
         if os.path.exists(file_path):
             os.remove(file_path)
-            
-    except Exception as e:
-        logging.error(f"Shazam error: {e}")
-        await update.message.reply_text(l['error'])
 
-# --- MƏTN MESAJLARINI QƏBUL ETMƏK ---
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     log_user(user_id) # İd qeyd olunur
@@ -278,10 +279,10 @@ def main():
     
     app.add_handler(CallbackQueryHandler(callback_handler))
     
-    # Səs yazıları ilə Shazam üçün handler (Səs gələndə bura yönlənir)
+    # Səsli mesajlar və normal audiolarda musiqi tapmaq üçün handler
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, handle_voice))
     
-    # Adi mətn (Link və ya musiqi adı) gələndə bura yönlənir
+    # Mətn mesajları (linklər və axtarışlar) üçün handler
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     app.run_polling(drop_pending_updates=True)
