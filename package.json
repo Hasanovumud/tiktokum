@@ -1,1 +1,7 @@
-{}
+{
+  "name": "bot-runtime",
+  "version": "1.0.0",
+  "description": "Node.js runtime for yt-dlp",
+  "main": "index.js",
+  "dependencies": {}
+}
