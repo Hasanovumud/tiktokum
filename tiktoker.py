@@ -5,7 +5,6 @@ import asyncio
 import requests
 import random
 import json # Statistika üçün əlavə edildi
-import re # Instagram linklərini oxumaq üçün əlavə edildi
 from flask import Flask
 from threading import Thread
 
@@ -37,6 +36,7 @@ STICKER_LIST = [
     "CAACAgIAAxkBAAIeemngpL1v9cLWrd1QFwvJZBuJjAlkAAKlhAACMHQwSkQ_SykcPSBAOwQ",
     "CAACAgIAAxkBAAIeo2niY6JSQ6dCLKNqCvsrfiJlE1bKAALUQQACeu3RSqdrtH1YD01qOwQ",
     "CAACAgIAAxkBAAIepWniY8YikpzFxuE58coD1YlYNCutAAKcPAAC1pPRSgNwydpKXx_OOwQ"
+
 ]
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -108,41 +108,6 @@ async def download_audio(query):
         await loop.run_in_executor(None, lambda: yt_dlp.YoutubeDL(opts).download([query if query.startswith("http") else f"ytsearch1:{query}"]))
         return a_file if os.path.exists(a_file) else None
     except: return None
-
-# --- INSTAGRAM YÜKLƏYİCİ (YENİ ƏLAVƏ EDİLDİ) ---
-async def download_instagram(url):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    }
-    try:
-        # Instagram-ın qorunmasını keçmək üçün ddinstagram güzgüsündən istifadə edirik
-        mod_url = url.replace("instagram.com", "ddinstagram.com")
-        loop = asyncio.get_event_loop()
-        res = await loop.run_in_executor(None, lambda: requests.get(mod_url, headers=headers, timeout=15))
-        
-        if res.status_code == 200:
-            video_match = re.search(r'<meta property="og:video" content="(.*?)"', res.text)
-            image_match = re.search(r'<meta property="og:image" content="(.*?)"', res.text)
-            
-            if video_match:
-                video_url = video_match.group(1).replace("&amp;", "&")
-                v_res = await loop.run_in_executor(None, lambda: requests.get(video_url, stream=True))
-                v_file = "insta_video.mp4"
-                with open(v_file, "wb") as f:
-                    for chunk in v_res.iter_content(chunk_size=1024):
-                        if chunk: f.write(chunk)
-                return "video", v_file
-            elif image_match:
-                image_url = image_match.group(1).replace("&amp;", "&")
-                i_res = await loop.run_in_executor(None, lambda: requests.get(image_url, stream=True))
-                i_file = "insta_photo.jpg"
-                with open(i_file, "wb") as f:
-                    for chunk in i_res.iter_content(chunk_size=1024):
-                        if chunk: f.write(chunk)
-                return "photo", i_file
-    except:
-        pass
-    return None, None
 
 # --- HANDLERS ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -225,29 +190,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try: await update.message.set_reaction(reaction="👀")
     except: pass
     
-    # --- INSTAGRAM YOXLANIŞI (YENİ ƏLAVƏ EDİLDİ) ---
-    if "instagram.com" in text:
-        await context.bot.send_chat_action(chat_id=update.message.chat_id, action="upload_photo")
-        m_type, m_file = await download_instagram(text)
-        
-        if m_type == "video":
-            log_download()
-            with open(m_file, 'rb') as vf:
-                await context.bot.send_video(chat_id=update.message.chat_id, video=vf, caption=f"✅ {l['thanks']}\n\n🤖 {BOT_USERNAME}")
-            os.remove(m_file)
-            try: await update.message.set_reaction(reaction="✅")
-            except: pass
-            return
-        elif m_type == "photo":
-            log_download()
-            with open(m_file, 'rb') as pf:
-                await context.bot.send_photo(chat_id=update.message.chat_id, photo=pf, caption=f"✅ {l['thanks']}\n\n🤖 {BOT_USERNAME}")
-            os.remove(m_file)
-            try: await update.message.set_reaction(reaction="✅")
-            except: pass
-            return
-
-    # Instagram deyilsə, normal qaydada davam edir (Youtube və s. üçün)
     await context.bot.send_chat_action(chat_id=update.message.chat_id, action="upload_video")
     video = await download_video(text)
 
